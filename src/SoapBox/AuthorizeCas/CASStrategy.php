@@ -26,7 +26,7 @@ class CASStrategy extends SingleSignOnStrategy {
 			$settings['context']
 		);
 
-		phpCAS::setCasSserverCACert($settings['ca_cert']);
+		phpCAS::setCasServerCACert($settings['ca_cert']);
 	}
 
 	/**
