@@ -8,9 +8,9 @@ use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 class CASStrategy extends SingleSignOnStrategy {
 
 	/**
-	 * Initializes the FacebookSession with our id and secret
+	 * Initializes the Cas
 	 *
-	 * @param array $settings array('id' => string, 'secret' => string)
+	 * @param array $settings array('host' => string, 'port' => int, 'context' => ???)
 	 * @param callable $store A callback that will store a KVP (Key Value Pair).
 	 * @param callable $load A callback that will return a value stored with the
 	 *	provided key.
@@ -33,8 +33,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	/**
 	 * Used to authenticate our user through one of the various methods.
 	 *
-	 * @param array parameters array('access_token' => string,
-	 *	'redirect_url' => string)
+	 * @param array parameters array()
 	 *
 	 * @throws AuthenticationException If the provided parameters do not
 	 *	successfully authenticate.
