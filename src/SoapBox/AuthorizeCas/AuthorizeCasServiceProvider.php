@@ -1,6 +1,7 @@
-<?php namespace Soapbox\AuthorizeCas;
+<?php namespace SoapBox\AuthorizeCas;
 
 use Illuminate\Support\ServiceProvider;
+use SoapBox\Authorize\StrategyFactory;
 
 class AuthorizeCasServiceProvider extends ServiceProvider {
 
@@ -28,7 +29,7 @@ class AuthorizeCasServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		StrategyFactory::register('cas', 'SoapBox\AuthorizeCas\CASStrategy');
 	}
 
 	/**
