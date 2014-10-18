@@ -26,7 +26,6 @@ class CASStrategy extends SingleSignOnStrategy {
 			$settings['context']
 		);
 
-		phpCAS::setFixedCallbackURL($settings['redirect_url']);
 		phpCAS::setCasSserverCACert($settings['ca_cert']);
 	}
 
