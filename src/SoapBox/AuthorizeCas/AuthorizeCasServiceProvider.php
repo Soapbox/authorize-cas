@@ -10,7 +10,7 @@ class AuthorizeCasServiceProvider extends ServiceProvider {
 	 *
 	 * @var bool
 	 */
-	protected $defer = false;
+	protected $defer = true;
 
 	/**
 	 * Bootstrap the application events.
@@ -27,9 +27,11 @@ class AuthorizeCasServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function register()
-	{
-		StrategyFactory::register('cas', 'SoapBox\AuthorizeCas\CASStrategy');
+	public function register() {
+		$this->app->bind(
+			'soapbox.authorize.cas',
+			'SoapBox\AuthorizeCas\CASStrategy'
+		);
 	}
 
 	/**
@@ -37,9 +39,8 @@ class AuthorizeCasServiceProvider extends ServiceProvider {
 	 *
 	 * @return array
 	 */
-	public function provides()
-	{
-		return array();
+	public function provides() {
+		return ['soapbox.authorize.cas'];
 	}
 
 }
