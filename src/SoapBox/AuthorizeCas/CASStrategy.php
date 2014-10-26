@@ -16,6 +16,15 @@ class CASStrategy extends SingleSignOnStrategy {
 	 *	provided key.
 	 */
 	public function __construct($settings = array(), $store = null, $load = null) {
+		if( !isset($settings['host']) ||
+			!isset($settings['port']) ||
+			!isset($settings['context']) ||
+			!isset($settings['ca_cert']) ) {
+			throw new MissingArgumentsException(
+				'Required parameters host, port, context, or ca_cert are missing'
+			);
+		}
+
 		// Disable debugging
 		phpCAS::setDebug(false);
 
