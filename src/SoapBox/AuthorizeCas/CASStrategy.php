@@ -15,7 +15,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	 * @param callable $load A callback that will return a value stored with the
 	 *	provided key.
 	 */
-	public function __construct($settings = array(), $store = null, $load = null) {
+	public function __construct($settings = []) {
 		if( !isset($settings['host']) ||
 			!isset($settings['port']) ||
 			!isset($settings['context']) ||
@@ -39,21 +39,31 @@ class CASStrategy extends SingleSignOnStrategy {
 	}
 
 	/**
-	 * Used to authenticate our user through one of the various methods.
+	 * This method is called to force authentication if the user was not already
+     * authenticated. If the user is not authenticated, halt by redirecting to
+     * the CAS server.
 	 *
-	 * @param array parameters array()
+	 * @param array $parameters Empty array
+	 * @param Closure $store Closure to handle the storage of session data
+	 * @param Closure $redirect Closure to handle the redirection of a user to the cas Auth site
+	 *
+	 * @return bool True if logged in
+	 */
+	public function login($parameters = [], $store, $redirect) {
+		return phpCAS::forceAuthentication();
+	}
+
+	/**
+	 * Used to retrieve the user from the strategy.
+	 *
+	 * @param mixed[] $parameters The additional parameters required to authenticate
 	 *
 	 * @throws AuthenticationException If the provided parameters do not
 	 *	successfully authenticate.
 	 *
-	 * @return User A mixed array repreesnting the authenticated user.
+	 * @return User The user retieved from the Strategy
 	 */
-	public function login($parameters = array()) {
-		phpCAS::forceAuthentication();
-		return $this->getUser($parameters);
-	}
-
-	public function getUser($parameters = array()) {
+	public function getUser($parameters = [], $load = null) {
 		try {
 			$user = new User;
 			$casUser = phpCAS::getAttributes();
@@ -68,9 +78,5 @@ class CASStrategy extends SingleSignOnStrategy {
 		} catch (\Exception $ex) {
 			throw new AuthenticationException(null, 0, $ex);
 		}
-	}
-
-	public function endpoint($parameters = array()) {
-		return $this->login($parameters);
 	}
 }
