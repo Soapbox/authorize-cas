@@ -49,7 +49,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	 *
 	 * @return bool True if logged in
 	 */
-	public function login($parameters = [], $store, $redirect) {
+	public function login($parameters = []) {
 		return phpCAS::forceAuthentication();
 	}
 
@@ -63,7 +63,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	 *
 	 * @return User The user retieved from the Strategy
 	 */
-	public function getUser($parameters = [], $load = null) {
+	public function getUser($parameters = []) {
 		try {
 			$user = new User;
 			$casUser = phpCAS::getAttributes();
