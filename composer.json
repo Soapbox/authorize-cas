@@ -18,7 +18,8 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.*",
-        "jasig/phpcas": "1.3.*@dev"
+        "jasig/phpcas": "1.3.*@dev",
+        "soapbox/authorize": "1.*"
     },
     "autoload": {
         "psr-0": {

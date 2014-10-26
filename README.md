@@ -11,7 +11,7 @@ Add the following to your `composer.json`
 ```
 "require": {
 	...
-	"soapbox/authorize-cas": "0.*",
+	"soapbox/authorize-cas": "1.*",
 	...
 }
 ```
