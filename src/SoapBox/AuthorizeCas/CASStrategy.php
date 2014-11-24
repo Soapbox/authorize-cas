@@ -66,7 +66,7 @@ class CASStrategy extends SingleSignOnStrategy {
 
 			return $user;
 		} catch (\Exception $ex) {
-			throw new AuthenticationException();
+			throw new AuthenticationException(null, 0, $ex);
 		}
 	}
 
