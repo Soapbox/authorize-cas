@@ -2,6 +2,8 @@
 
 use \phpCAS;
 use SoapBox\Authorize\User;
+use SoapBox\Authorize\Session;
+use SoapBox\Authorize\Router;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 
@@ -11,11 +13,11 @@ class CASStrategy extends SingleSignOnStrategy {
 	 * Initializes the Cas
 	 *
 	 * @param array $settings array('host' => string, 'port' => int, 'context' => ???)
-	 * @param callable $store A callback that will store a KVP (Key Value Pair).
-	 * @param callable $load A callback that will return a value stored with the
+	 * @param Session $session Provides the strategy a place to store / retrieve data
+	 * @param Router $router Provides the strategy a mechanism to redirect users
 	 *	provided key.
 	 */
-	public function __construct($settings = array(), $store = null, $load = null) {
+	public function __construct(array $settings = [], Session $session, Router $router) {
 		if( !isset($settings['host']) ||
 			!isset($settings['port']) ||
 			!isset($settings['context']) ||
@@ -39,21 +41,31 @@ class CASStrategy extends SingleSignOnStrategy {
 	}
 
 	/**
-	 * Used to authenticate our user through one of the various methods.
+	 * This method is called to force authentication if the user was not already
+     * authenticated. If the user is not authenticated, halt by redirecting to
+     * the CAS server.
 	 *
-	 * @param array parameters array()
+	 * @param array $parameters Empty array
+	 * @param Closure $store Closure to handle the storage of session data
+	 * @param Closure $redirect Closure to handle the redirection of a user to the cas Auth site
+	 *
+	 * @return bool True if logged in
+	 */
+	public function login(array $parameters = []) {
+		return phpCAS::forceAuthentication();
+	}
+
+	/**
+	 * Used to retrieve the user from the strategy.
+	 *
+	 * @param mixed[] $parameters The additional parameters required to authenticate
 	 *
 	 * @throws AuthenticationException If the provided parameters do not
 	 *	successfully authenticate.
 	 *
-	 * @return User A mixed array repreesnting the authenticated user.
+	 * @return User The user retieved from the Strategy
 	 */
-	public function login($parameters = array()) {
-		phpCAS::forceAuthentication();
-		return $this->getUser($parameters);
-	}
-
-	public function getUser($parameters = array()) {
+	public function getUser(array $parameters = []) {
 		try {
 			$user = new User;
 			$casUser = phpCAS::getAttributes();
@@ -68,9 +80,5 @@ class CASStrategy extends SingleSignOnStrategy {
 		} catch (\Exception $ex) {
 			throw new AuthenticationException(null, 0, $ex);
 		}
-	}
-
-	public function endpoint($parameters = array()) {
-		return $this->login($parameters);
 	}
 }
