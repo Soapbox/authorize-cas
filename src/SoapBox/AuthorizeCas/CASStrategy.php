@@ -2,6 +2,8 @@
 
 use \phpCAS;
 use SoapBox\Authorize\User;
+use SoapBox\Authorize\Session;
+use SoapBox\Authorize\Router;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 
@@ -11,11 +13,11 @@ class CASStrategy extends SingleSignOnStrategy {
 	 * Initializes the Cas
 	 *
 	 * @param array $settings array('host' => string, 'port' => int, 'context' => ???)
-	 * @param callable $store A callback that will store a KVP (Key Value Pair).
-	 * @param callable $load A callback that will return a value stored with the
+	 * @param Session $session Provides the strategy a place to store / retrieve data
+	 * @param Router $router Provides the strategy a mechanism to redirect users
 	 *	provided key.
 	 */
-	public function __construct($settings = []) {
+	public function __construct(array $settings = [], Session $session, Router $router) {
 		if( !isset($settings['host']) ||
 			!isset($settings['port']) ||
 			!isset($settings['context']) ||
@@ -49,7 +51,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	 *
 	 * @return bool True if logged in
 	 */
-	public function login($parameters = []) {
+	public function login(array $parameters = []) {
 		return phpCAS::forceAuthentication();
 	}
 
@@ -63,7 +65,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	 *
 	 * @return User The user retieved from the Strategy
 	 */
-	public function getUser($parameters = []) {
+	public function getUser(array $parameters = []) {
 		try {
 			$user = new User;
 			$casUser = phpCAS::getAttributes();
