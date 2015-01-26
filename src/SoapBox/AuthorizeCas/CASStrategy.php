@@ -19,6 +19,7 @@ class CASStrategy extends SingleSignOnStrategy {
 		if( !isset($settings['host']) ||
 			!isset($settings['port']) ||
 			!isset($settings['context']) ||
+			!isset($settings['redirect_url']) ||
 			!isset($settings['ca_cert']) ) {
 			throw new MissingArgumentsException(
 				'Required parameters host, port, context, or ca_cert are missing'
@@ -36,6 +37,8 @@ class CASStrategy extends SingleSignOnStrategy {
 		);
 
 		phpCAS::setCasServerCACert($settings['ca_cert']);
+
+		phpCAS::setFixedServiceURL($settings['redirect_url']);
 	}
 
 	/**
