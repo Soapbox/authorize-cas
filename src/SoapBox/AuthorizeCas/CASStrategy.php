@@ -29,12 +29,28 @@ class CASStrategy extends SingleSignOnStrategy {
 		// Disable debugging
 		phpCAS::setDebug(false);
 
-		phpCAS::client(
-			SAML_VERSION_1_1,
-			$settings['host'],
-			$settings['port'],
-			$settings['context']
-		);
+		if (isset($settings['proxy']) && is_array($settings['proxy'])) {
+			phpCAS::proxy(
+				SAML_VERSION_1_1,
+				$settings['host'],
+				$settings['port'],
+				$settings['context']
+			);
+
+			phpCAS::setPGTStorageDB(
+				$settings['proxy']['dsn'],
+				$settings['proxy']['username'],
+				$settings['proxy']['password'],
+				$settings['proxy']['table']
+			);
+		} else {
+			phpCAS::client(
+				SAML_VERSION_1_1,
+				$settings['host'],
+				$settings['port'],
+				$settings['context']
+			);
+		}
 
 		phpCAS::setCasServerCACert($settings['ca_cert']);
 
