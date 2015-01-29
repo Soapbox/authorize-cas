@@ -33,7 +33,7 @@ class CASStrategy extends SingleSignOnStrategy {
 			phpCAS::proxy(
 				SAML_VERSION_1_1,
 				$settings['host'],
-				$settings['port'],
+				(int) $settings['port'],
 				$settings['context']
 			);
 
@@ -47,7 +47,7 @@ class CASStrategy extends SingleSignOnStrategy {
 			phpCAS::client(
 				SAML_VERSION_1_1,
 				$settings['host'],
-				$settings['port'],
+				(int) $settings['port'],
 				$settings['context']
 			);
 		}
