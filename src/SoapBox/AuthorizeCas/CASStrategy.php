@@ -43,6 +43,10 @@ class CASStrategy extends SingleSignOnStrategy {
 				$settings['proxy']['password'],
 				$settings['proxy']['table']
 			);
+
+			phpCAS::setCasServerCACert($settings['ca_cert']);
+
+			phpCAS::setFixedCallbackURL($settings['redirect_url']);
 		} else {
 			phpCAS::client(
 				SAML_VERSION_1_1,
@@ -50,11 +54,11 @@ class CASStrategy extends SingleSignOnStrategy {
 				(int) $settings['port'],
 				$settings['context']
 			);
+
+			phpCAS::setCasServerCACert($settings['ca_cert']);
+
+			phpCAS::setFixedServiceURL($settings['redirect_url']);
 		}
-
-		phpCAS::setCasServerCACert($settings['ca_cert']);
-
-		phpCAS::setFixedServiceURL($settings['redirect_url']);
 	}
 
 	/**
