@@ -63,7 +63,7 @@ class CASStrategy extends SingleSignOnStrategy {
 
 			$user->id = phpCAS::getUser() . '@ryerson.ca';
 			$user->email = phpCAS::getUser() . '@ryerson.ca';
-			$user->accessToken = $user->id;
+			$user->accessToken = 'token';
 			$user->firstname = $casUser['firstname'];
 			$user->lastname = $casUser['lastname'];
 
