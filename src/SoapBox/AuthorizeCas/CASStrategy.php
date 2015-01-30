@@ -76,4 +76,10 @@ class CASStrategy extends SingleSignOnStrategy {
 	public function endpoint($parameters = array()) {
 		return $this->login($parameters);
 	}
+
+	public function signout($redirectUrl) {
+		phpCAS::logout(
+			['url'=>$redirectUrl]
+		);
+	}
 }
