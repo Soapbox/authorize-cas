@@ -7,6 +7,8 @@ use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 
 class CASStrategy extends SingleSignOnStrategy {
 
+	protected $host;
+
 	/**
 	 * Initializes the Cas
 	 *
@@ -25,6 +27,8 @@ class CASStrategy extends SingleSignOnStrategy {
 				'Required parameters host, port, context, or ca_cert are missing'
 			);
 		}
+
+		$this->host = $settings['host'];
 
 		// Disable debugging
 		phpCAS::setDebug(false);
@@ -78,6 +82,7 @@ class CASStrategy extends SingleSignOnStrategy {
 	}
 
 	public function signout($redirectUrl) {
+		phpCAS::handleLogoutRequests(true, [$this->host]);
 		phpCAS::logout(
 			['url'=>$redirectUrl]
 		);
