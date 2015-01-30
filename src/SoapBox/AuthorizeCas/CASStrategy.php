@@ -74,6 +74,6 @@ class CASStrategy extends SingleSignOnStrategy {
 	}
 
 	public function endpoint($parameters = array()) {
-		return $this->getUser($parameters);
+		return $this->login($parameters);
 	}
 }
