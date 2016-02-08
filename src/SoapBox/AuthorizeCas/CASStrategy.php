@@ -2,8 +2,8 @@
 
 use \phpCAS;
 use SoapBox\Authorize\User;
-use SoapBox\Authorize\Exceptions\AuthenticationException;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
+use SoapBox\Authorize\Exceptions\AuthenticationException;
 
 class CASStrategy extends SingleSignOnStrategy {
 
@@ -63,13 +63,40 @@ class CASStrategy extends SingleSignOnStrategy {
 	public function getUser($parameters = array()) {
 		try {
 			$user = new User;
-			$casUser = phpCAS::getAttributes();
+			$attributes = phpCAS::getAttributes();
 
-			$user->id = phpCAS::getUser() . '@ryerson.ca';
-			$user->email = phpCAS::getUser() . '@ryerson.ca';
+			$fields = $parameters['parameters_map'];
+
+			$user->username = phpCAS::getUser();
+
+			if (isset($fields['email'])) {
+				$user->email = $attributes[$fields['email']];
+			} else {
+				$user->email = $user->username;
+			}
+
+			if (isset($fields['id'])) {
+				$user->id = $attributes[$fields['id']];
+			} else {
+				$user->id = $user->username;
+			}
+
+			$user->firstname = $attributes[$fields['firstname']];
+			$user->lastname = $attributes[$fields['lastname']];
+
 			$user->accessToken = 'token';
-			$user->firstname = $casUser['firstname'];
-			$user->lastname = $casUser['lastname'];
+
+			if (isset($fields['custom_fields'])) {
+				$customFields = json_decode($fields['custom_fields'], true);
+
+				foreach ($customFields as $key => $value) {
+					if (isset($attributes[$value])) {
+						$user->custom[$key] = $attributes[$value];
+					} else {
+						$user->custom[$key] = '';
+					}
+				}
+			}
 
 			return $user;
 		} catch (\Exception $ex) {
