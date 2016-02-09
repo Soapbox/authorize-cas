@@ -69,16 +69,14 @@ class CASStrategy extends SingleSignOnStrategy {
 
 			$user->username = phpCAS::getUser();
 
+			$user->email = $user->username;
 			if (isset($fields['email'])) {
 				$user->email = $attributes[$fields['email']];
-			} else {
-				$user->email = $user->username;
 			}
 
+			$user->id = $user->username;
 			if (isset($fields['id'])) {
 				$user->id = $attributes[$fields['id']];
-			} else {
-				$user->id = $user->username;
 			}
 
 			$user->firstname = $attributes[$fields['firstname']];
@@ -86,14 +84,12 @@ class CASStrategy extends SingleSignOnStrategy {
 
 			$user->accessToken = 'token';
 
-			if (isset($fields['custom_fields'])) {
-				$customFields = json_decode($fields['custom_fields'], true);
+			if (isset($fields['additional_attributes'])) {
+				$additionalAttributes = json_decode($fields['additional_attributes'], true);
 
-				foreach ($customFields as $key => $value) {
+				foreach ($additionalAttributes as $key => $value) {
 					if (isset($attributes[$value])) {
 						$user->custom[$key] = $attributes[$value];
-					} else {
-						$user->custom[$key] = '';
 					}
 				}
 			}
