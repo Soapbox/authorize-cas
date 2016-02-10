@@ -1,6 +1,7 @@
 <?php namespace SoapBox\AuthorizeCas;
 
-use \phpCAS;
+use phpCAS;
+use Exception;
 use SoapBox\Authorize\User;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
@@ -56,7 +57,12 @@ class CASStrategy extends SingleSignOnStrategy {
 	 * @return User A mixed array repreesnting the authenticated user.
 	 */
 	public function login($parameters = array()) {
-		phpCAS::forceAuthentication();
+		try {
+			phpCAS::forceAuthentication();
+		} catch (Exception $ex) {
+			throw new AuthenticationException(null, 0, $ex);
+		}
+
 		return $this->getUser($parameters);
 	}
 
@@ -70,12 +76,12 @@ class CASStrategy extends SingleSignOnStrategy {
 			$user->username = phpCAS::getUser();
 
 			$user->email = $user->username;
-			if (isset($fields['email'])) {
+			if (!empty($fields['email'])) {
 				$user->email = $attributes[$fields['email']];
 			}
 
 			$user->id = $user->username;
-			if (isset($fields['id'])) {
+			if (!empty($fields['id'])) {
 				$user->id = $attributes[$fields['id']];
 			}
 
@@ -84,18 +90,18 @@ class CASStrategy extends SingleSignOnStrategy {
 
 			$user->accessToken = 'token';
 
-			if (isset($fields['additional_attributes'])) {
+			if (!empty($fields['additional_attributes'])) {
 				$additionalAttributes = json_decode($fields['additional_attributes'], true);
 
 				foreach ($additionalAttributes as $key => $value) {
-					if (isset($attributes[$value])) {
+					if (!empty($attributes[$value])) {
 						$user->custom[$key] = $attributes[$value];
 					}
 				}
 			}
 
 			return $user;
-		} catch (\Exception $ex) {
+		} catch (Exception $ex) {
 			throw new AuthenticationException(null, 0, $ex);
 		}
 	}
